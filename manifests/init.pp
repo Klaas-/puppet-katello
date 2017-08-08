@@ -54,6 +54,16 @@
 #
 # $repo_gpgkey::        The GPG key to use
 #
+# $enable_candlepin::   Whether to enable candlepin
+#
+# $enable_qpid::        Whether to enable qpid
+#
+# $enable_qpid_client:: Whether to enable qpid client
+#
+# $enable_pulp::        Whether to enable pulp
+#
+# $enable_application:: Whether to enable application (katello web ui)
+#
 class katello (
   String $user = $::katello::params::user,
   String $group = $::katello::params::group,
@@ -83,24 +93,54 @@ class katello (
   String $repo_version = $::katello::params::repo_version,
   Boolean $repo_gpgcheck = $::katello::params::repo_gpgcheck,
   Optional[String] $repo_gpgkey = $::katello::params::repo_gpgkey,
+  Boolean $enable_candlepin = $::katello::params::enable_candlepin,
+  Boolean $enable_qpid = $::katello::params::enable_qpid,
+  Boolean $enable_qpid_client = $::katello::params::enable_qpid_client,
+  Boolean $enable_pulp = $::katello::params::enable_pulp,
+  Boolean $enable_application = $::katello::params::enable_application,
 ) inherits katello::params {
   include ::certs
   $candlepin_ca_cert = $::certs::ca_cert
   $pulp_ca_cert = $::certs::katello_server_ca_cert
 
-  Class['certs'] ~>
-  class { '::certs::apache': } ~>
-  class { '::katello::repo': } ~>
-  class { '::katello::candlepin': } ~>
-  class { '::katello::application': } ~>
-  class { '::katello::pulp': } ~>
-  class { '::katello::qpid_client': }
-  class { '::katello::qpid': }
-  class { '::certs::foreman': }
+  class { '::katello::repo': }
 
-  # TODO: Is this still needed with proper containment?
-  Exec['cpinit'] -> Exec['foreman-rake-db:seed']
-  Class['certs::ca'] ~> Service['httpd']
+  if $enable_candlepin {
+    Class['certs'] ~>
+    class { '::katello::candlepin': }
+  }
+
+  if $enable_qpid {
+    Class['certs'] ~>
+    class { '::katello::qpid': }
+  }
+
+
+  if $enable_qpid_client {
+    Class['certs'] ~>
+    class { '::katello::qpid_client': }
+  }
+
+  if $enable_pulp {
+    Class['certs'] ~>
+    class { '::katello::pulp': }
+    if defined(Class['::katello::candlepin']) {
+      Class['::katello::candlepin'] ~> Class['::katello::pulp']
+    }
+  }
+
+  if $enable_application {
+    Class['certs'] ~>
+    class { '::certs::apache': } ~>
+    class { '::katello::application': }
+    class { '::certs::foreman': }
+
+    # TODO: Is this still needed with proper containment?
+    if defined(Exec['cpinit']) {
+      Exec['cpinit'] -> Exec['foreman-rake-db:seed']
+    }
+    Class['certs::ca'] ~> Service['httpd']
+  }
 
   User<|title == apache|>{groups +> $user_groups}
 }

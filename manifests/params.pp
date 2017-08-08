@@ -70,4 +70,10 @@ class katello::params {
   $repo_yumcode = "el${::operatingsystemmajrelease}"
   $repo_gpgcheck = false
   $repo_gpgkey = undef
+
+  $enable_candlepin = true
+  $enable_qpid = true
+  $enable_qpid_client = true
+  $enable_pulp = true
+  $enable_application = true
 }

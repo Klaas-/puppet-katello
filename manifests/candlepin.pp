@@ -12,6 +12,7 @@ class katello::candlepin(
   Boolean $db_ssl = $::katello::candlepin_db_ssl,
   Boolean $db_ssl_verify = $::katello::candlepin_db_ssl_verify,
   Boolean $manage_db = $::katello::candlepin_manage_db,
+  String $qpid_host = $::katello::qpid_host,
 ) {
   include ::certs::qpid
   include ::certs::candlepin
@@ -33,6 +34,7 @@ class katello::candlepin(
     amqp_truststore_password     => $::certs::candlepin::keystore_password,
     amqp_keystore                => $::certs::candlepin::amqp_keystore,
     amqp_truststore              => $::certs::candlepin::amqp_truststore,
+    qpid_hostname                => $qpid_hostname,
     qpid_ssl_cert                => $::certs::qpid::client_cert,
     qpid_ssl_key                 => $::certs::qpid::client_key,
     db_host                      => $db_host,

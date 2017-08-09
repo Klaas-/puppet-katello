@@ -97,6 +97,7 @@
 #
 # $qpid_url::           URL of the qpid server instance
 #
+# $qpid_interface::     Interface that qpid should listen on
 #
 class katello (
   String $user = $::katello::params::user,
@@ -151,6 +152,7 @@ class katello (
   Stdlib::HTTPUrl $candlepin_url = "https://${candlepin_hostname}:8443/candlepin",
   Stdlib::HTTPUrl $pulp_url = "https://${pulp_hostname}/pulp/api/v2/",
   String $qpid_url = "amqp:ssl:${qpid_hostname}:5671",
+  String $qpid_interface = $::katello::params::qpid_interface,
 ) inherits katello::params {
   include ::certs
   $candlepin_ca_cert = $::certs::ca_cert

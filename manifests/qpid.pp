@@ -5,6 +5,7 @@ class katello::qpid (
   String $candlepin_qpid_exchange = $::katello::candlepin_qpid_exchange,
   Integer[0, 5000] $session_unacked = $::katello::qpid_session_unacked,
   Integer[0, 5000] $wcache_page_size = $::katello::qpid_wcache_page_size,
+  String $qpid_interface = $::katello::qpid_interface,
 ){
   include ::certs::qpid
 
@@ -13,7 +14,7 @@ class katello::qpid (
     ssl_cert_db            => $::certs::nss_db_dir,
     ssl_cert_password_file => $::certs::qpid::nss_db_password_file,
     ssl_cert_name          => 'broker',
-    interface              => 'lo',
+    interface              => $qpid_interface,
     session_unacked        => $session_unacked,
     wcache_page_size       => $wcache_page_size,
     subscribe              => Class['certs::qpid'],

@@ -12,7 +12,7 @@ class katello::candlepin(
   Boolean $db_ssl = $::katello::candlepin_db_ssl,
   Boolean $db_ssl_verify = $::katello::candlepin_db_ssl_verify,
   Boolean $manage_db = $::katello::candlepin_manage_db,
-  String $qpid_host = $::katello::qpid_host,
+  String $qpid_hostname = $::katello::qpid_hostname,
 ) {
   include ::certs::qpid
   include ::certs::candlepin

@@ -85,15 +85,15 @@
 #
 # $enable_application:: Whether to enable application (katello web ui)
 #
-# $candlepin_host::     Hostname of the candlepin instance
+# $candlepin_hostname:: Hostname of the candlepin instance
 #
 # $candlepin_url::      URL of the candlepin instance
 #
-# $pulp_host::          Hostname of the pulp instance
+# $pulp_hostname::      Hostname of the pulp instance
 #
 # $pulp_url::           URL of the pulp instance
 #
-# $qpid_host::          Hostname of the qpid server instance
+# $qpid_hostname::      Hostname of the qpid server instance
 #
 # $qpid_url::           URL of the qpid server instance
 #
@@ -145,12 +145,12 @@ class katello (
   Boolean $enable_pulp = $::katello::params::enable_pulp,
   Boolean $enable_application = $::katello::params::enable_application,
 
-  String $candlepin_host = $::katello::params::candlepin_host,
-  String $pulp_host = $::katello::params::pulp_host,
-  String $qpid_host = $::katello::params::qpid_host,
-  Stdlib::HTTPUrl $candlepin_url = "https://${candlepin_host}:8443/candlepin",
-  Stdlib::HTTPUrl $pulp_url = "https://${pulp_host}/pulp/api/v2/",
-  String $qpid_url = "amqp:ssl:${qpid_host}:5671",
+  String $candlepin_hostname = $::katello::params::candlepin_hostname,
+  String $pulp_hostname = $::katello::params::pulp_hostname,
+  String $qpid_hostname = $::katello::params::qpid_host,
+  Stdlib::HTTPUrl $candlepin_url = "https://${candlepin_hostname}:8443/candlepin",
+  Stdlib::HTTPUrl $pulp_url = "https://${pulp_hostname}/pulp/api/v2/",
+  String $qpid_url = "amqp:ssl:${qpid_hostname}:5671",
 ) inherits katello::params {
   include ::certs
   $candlepin_ca_cert = $::certs::ca_cert

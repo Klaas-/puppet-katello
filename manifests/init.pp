@@ -147,7 +147,7 @@ class katello (
 
   String $candlepin_hostname = $::katello::params::candlepin_hostname,
   String $pulp_hostname = $::katello::params::pulp_hostname,
-  String $qpid_hostname = $::katello::params::qpid_host,
+  String $qpid_hostname = $::katello::params::qpid_hostname,
   Stdlib::HTTPUrl $candlepin_url = "https://${candlepin_hostname}:8443/candlepin",
   Stdlib::HTTPUrl $pulp_url = "https://${pulp_hostname}/pulp/api/v2/",
   String $qpid_url = "amqp:ssl:${qpid_hostname}:5671",
